@@ -1,13 +1,10 @@
-function addRotateButton() {
+function addRotateButtonToVideos() {
     const videoElements = document.querySelectorAll('video');
   
-    if (!videoElements.length) return; // Sayfada video yoksa işlem yapma
-  
     videoElements.forEach((video) => {
-      const parent = video.closest('div[data-instancekey]'); // Video divini bul
-  
+      const parent = video.closest('div[data-instancekey]');
       if (parent && !parent.querySelector('.rotate-btn')) {
-        // Zaten bir buton eklenmişse tekrar ekleme
+        // Buton zaten ekliyse tekrar ekleme
         const button = document.createElement('button');
         button.innerText = 'Döndür';
         button.className = 'rotate-btn';
@@ -30,18 +27,17 @@ function addRotateButton() {
         });
   
         parent.style.position = 'relative'; // Parent'in konumlandırmasını düzenle
-        parent.appendChild(button); // Butonu videonun bulunduğu bölgeye ekle
+        parent.appendChild(button);
       }
     });
   }
   
-  // Video değişikliklerini dinle
-  const observer = new MutationObserver(addRotateButton);
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
+  // DOM değişikliklerini dinle
+  const observer = new MutationObserver(() => {
+    addRotateButtonToVideos();
   });
+  observer.observe(document.body, { childList: true, subtree: true });
   
-  // Sayfa yüklendiğinde çalıştır
-  addRotateButton();
+  // Sayfa yüklendiğinde başlat
+  addRotateButtonToVideos();
   
