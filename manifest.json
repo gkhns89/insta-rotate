@@ -1,20 +1,19 @@
 {
-    "manifest_version": 3,
-    "name": "Instagram Video Rotator",
-    "version": "1.0",
-    "description": "Instagram masaüstü versiyonunda yatay videoları izlemeyi kolaylaştırır.",
-    "permissions": ["activeTab", "scripting"],
-    "host_permissions": ["https://www.instagram.com/*"],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-      }
+  "manifest_version": 3,
+  "name": "Instagram Video Rotator",
+  "version": "1.1",
+  "description": "Instagram masaüstü versiyonunda yatay videoları izlemeyi kolaylaştırır.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://www.instagram.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content.js"]
     }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
-  
+}
