@@ -78,66 +78,32 @@
       video.style.transformOrigin = 'center';
       video.dataset.rotation = currentRotation.toString();
       
-      // Container genişletme - Instagram'ın farklı yapılarını destekler
+      // Container genişletme - sadece yatay modda
       const isHorizontal = currentRotation === 90 || currentRotation === 270;
       
-      if (isHorizontal) {
-        // Video'nun yüksekliğini genişlik olarak kullan
-        const videoHeight = video.videoHeight || video.offsetHeight;
-        const videoWidth = video.videoWidth || video.offsetWidth;
-        const newWidth = Math.max(videoHeight, 600); // Minimum 600px
-        
-        // Farklı Instagram layout'ları için container'ları bul ve genişlet
-        const selectors = [
-          // Ana post container'ı
-          'article div[style*="max-width"]',
-          'article div[style*="width"]',
-          // Reels container'ı
-          'div[style*="width"][style*="height"]',
-          // Video wrapper'ı
-          'div[style*="padding-bottom"]',
-          // Genel container'lar
-          'div[style*="max-width: 470px"]',
-          'div[style*="max-width: 540px"]'
-        ];
-        
-        const article = video.closest('article') || video.closest('div[role="dialog"]');
-        
-        selectors.forEach(selector => {
-          const elements = article ? article.querySelectorAll(selector) : document.querySelectorAll(selector);
-          elements.forEach(element => {
-            if (element.contains(video)) {
-              element.style.maxWidth = `${newWidth}px`;
-              element.style.width = `${newWidth}px`;
-              element.setAttribute('data-rotator-modified', 'true');
-            }
-          });
-        });
-        
-        // Video container'ını direkt genişlet
-        const directContainer = video.parentElement;
-        if (directContainer) {
-          directContainer.style.maxWidth = `${newWidth}px`;
-          directContainer.style.width = `${newWidth}px`;
-          directContainer.setAttribute('data-rotator-modified', 'true');
+      // Video'nun bulunduğu ana container'ı bul
+      const videoContainer = video.closest('div[style*="max-width"]') || 
+                            video.closest('div[style*="width"]') ||
+                            video.closest('article');
+      
+      if (videoContainer) {
+        if (isHorizontal) {
+          // Yatay mod - genişlet
+          videoContainer.style.maxWidth = '700px';
+          videoContainer.style.width = '700px';
+          videoContainer.setAttribute('data-original-max-width', videoContainer.style.maxWidth || '');
+          videoContainer.setAttribute('data-original-width', videoContainer.style.width || '');
+        } else {
+          // Dik mod - eski haline döndür
+          const originalMaxWidth = videoContainer.getAttribute('data-original-max-width');
+          const originalWidth = videoContainer.getAttribute('data-original-width');
+          
+          videoContainer.style.maxWidth = originalMaxWidth || '';
+          videoContainer.style.width = originalWidth || '';
+          
+          videoContainer.removeAttribute('data-original-max-width');
+          videoContainer.removeAttribute('data-original-width');
         }
-        
-        // Aspect ratio container'ını düzelt
-        const aspectRatioContainer = video.closest('div[style*="padding-bottom"]');
-        if (aspectRatioContainer) {
-          aspectRatioContainer.style.paddingBottom = '56.25%'; // 16:9 aspect ratio
-          aspectRatioContainer.setAttribute('data-rotator-modified', 'true');
-        }
-        
-      } else {
-        // Normal boyuta geri döndür
-        const modifiedElements = document.querySelectorAll('[data-rotator-modified="true"]');
-        modifiedElements.forEach(element => {
-          element.style.maxWidth = '';
-          element.style.width = '';
-          element.style.paddingBottom = '';
-          element.removeAttribute('data-rotator-modified');
-        });
       }
     });
     
