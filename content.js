@@ -93,31 +93,48 @@
                               video.closest('div[role="dialog"]');
         
         if (reelsContainer) {
+          // Geçiş efekti ekle
+          if (!reelsContainer.style.transition) {
+            reelsContainer.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+          }
+          
           if (isHorizontal) {
             // Yatay mod - genişlet
             if (!reelsContainer.hasAttribute('data-original-max-width')) {
               reelsContainer.setAttribute('data-original-max-width', reelsContainer.style.maxWidth || '');
               reelsContainer.setAttribute('data-original-width', reelsContainer.style.width || '');
             }
+            
+            // Efektli genişleme
             reelsContainer.style.maxWidth = '700px';
             reelsContainer.style.width = '700px';
+            reelsContainer.style.transform = 'scale(1.02)';
             
-            // Buton konumunu Reels için ayarla
-            rotateButton.style.left = `${(700 - 470) / 2 + 12}px`; // Center adjustment + margin
+            // Scale efektini kaldır
+            setTimeout(() => {
+              reelsContainer.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Buton konumunu sabit tut - hiç hareket etmesin
             
           } else {
             // Dik mod - eski haline döndür
             const originalMaxWidth = reelsContainer.getAttribute('data-original-max-width');
             const originalWidth = reelsContainer.getAttribute('data-original-width');
             
-            reelsContainer.style.maxWidth = originalMaxWidth || '';
-            reelsContainer.style.width = originalWidth || '';
+            // Efektli daralma
+            reelsContainer.style.transform = 'scale(0.98)';
             
-            reelsContainer.removeAttribute('data-original-max-width');
-            reelsContainer.removeAttribute('data-original-width');
+            setTimeout(() => {
+              reelsContainer.style.maxWidth = originalMaxWidth || '';
+              reelsContainer.style.width = originalWidth || '';
+              reelsContainer.style.transform = 'scale(1)';
+              
+              reelsContainer.removeAttribute('data-original-max-width');
+              reelsContainer.removeAttribute('data-original-width');
+            }, 100);
             
-            // Buton konumunu eski haline döndür
-            rotateButton.style.left = '12px';
+            // Buton konumunu sabit tut - hiç hareket etmesin
           }
         }
       } else {
@@ -157,6 +174,11 @@
           }
           
           if (postContainer) {
+            // Geçiş efekti ekle
+            if (!postContainer.style.transition) {
+              postContainer.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            }
+            
             if (isHorizontal) {
               // Yatay mod - genişlet
               // Orijinal değerleri SADECE İLK DEFA horizontal moda geçerken sakla
@@ -170,48 +192,50 @@
                 postContainer.setAttribute('data-original-width', currentWidth);
               }
               
-              // 16:9 videolar için yeterli genişlik - 580px kullan
+              // Efektli genişleme
               postContainer.style.maxWidth = '580px !important';
               postContainer.style.width = '580px !important';
-              
-              // Responsive behavior için min-width de ekle
               postContainer.style.minWidth = '580px';
+              postContainer.style.transform = 'scale(1.02)';
               
-              // Buton konumunu normal akış için ayarla
-              // Genişlik farkının yarısını hesapla ve buton konumunu ayarla
-              const originalWidth = 470; // Instagram'ın standart genişliği
-              const newWidth = 580;
-              const widthDifference = newWidth - originalWidth;
-              const buttonLeftOffset = widthDifference / 2 + 12; // Merkezleme + margin
+              // Scale efektini kaldır
+              setTimeout(() => {
+                postContainer.style.transform = 'scale(1)';
+              }, 200);
               
-              rotateButton.style.left = `${buttonLeftOffset}px`;
+              // Buton konumunu sabit tut - hiç hareket etmesin
               
             } else {
               // Dik mod - eski haline döndür
               const originalMaxWidth = postContainer.getAttribute('data-original-max-width');
               const originalWidth = postContainer.getAttribute('data-original-width');
               
-              if (originalMaxWidth && originalMaxWidth !== 'none') {
-                postContainer.style.maxWidth = originalMaxWidth;
-              } else {
-                postContainer.style.maxWidth = '';
-              }
+              // Efektli daralma
+              postContainer.style.transform = 'scale(0.98)';
               
-              if (originalWidth && originalWidth !== 'auto') {
-                postContainer.style.width = originalWidth;
-              } else {
-                postContainer.style.width = '';
-              }
+              setTimeout(() => {
+                if (originalMaxWidth && originalMaxWidth !== 'none') {
+                  postContainer.style.maxWidth = originalMaxWidth;
+                } else {
+                  postContainer.style.maxWidth = '';
+                }
+                
+                if (originalWidth && originalWidth !== 'auto') {
+                  postContainer.style.width = originalWidth;
+                } else {
+                  postContainer.style.width = '';
+                }
+                
+                // min-width'i de temizle
+                postContainer.style.minWidth = '';
+                postContainer.style.transform = 'scale(1)';
+                
+                // Artık vertical moda döndüğü için data attributelarını temizle
+                postContainer.removeAttribute('data-original-max-width');
+                postContainer.removeAttribute('data-original-width');
+              }, 100);
               
-              // min-width'i de temizle
-              postContainer.style.minWidth = '';
-              
-              // Buton konumunu eski haline döndür
-              rotateButton.style.left = '12px';
-              
-              // Artık vertical moda döndüğü için data attributelarını temizle
-              postContainer.removeAttribute('data-original-max-width');
-              postContainer.removeAttribute('data-original-width');
+              // Buton konumunu sabit tut - hiç hareket etmesin
             }
           }
         }
