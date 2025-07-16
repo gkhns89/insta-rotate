@@ -66,6 +66,19 @@
       </svg>
     `;
     
+    // Buton konumunu dinamik olarak ayarlayan fonksiyon
+    function adjustButtonPosition(isHorizontal) {
+      if (isHorizontal) {
+        // Yatay modda buton konumunu ayarla
+        rotateButton.style.left = '12px';
+        rotateButton.style.top = '12px';
+      } else {
+        // Dikey modda eski konuma döndür
+        rotateButton.style.left = '12px';
+        rotateButton.style.top = '12px';
+      }
+    }
+    
     // Click handler
     rotateButton.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -170,6 +183,16 @@
               // Responsive behavior için min-width de ekle
               postContainer.style.minWidth = '580px';
               
+              // Buton container'ının da genişlemesini sağla
+              const buttonContainer = rotateButton.parentElement;
+              if (buttonContainer && buttonContainer !== container) {
+                // Eğer buton farklı bir container'da ise onu da genişlet
+                if (!buttonContainer.hasAttribute('data-original-width')) {
+                  buttonContainer.setAttribute('data-original-width', buttonContainer.style.width || '');
+                }
+                buttonContainer.style.width = '580px';
+              }
+              
             } else {
               // Dik mod - eski haline döndür
               const originalMaxWidth = postContainer.getAttribute('data-original-max-width');
@@ -190,6 +213,14 @@
               // min-width'i de temizle
               postContainer.style.minWidth = '';
               
+              // Buton container'ını da eski haline döndür
+              const buttonContainer = rotateButton.parentElement;
+              if (buttonContainer && buttonContainer !== container) {
+                const originalButtonWidth = buttonContainer.getAttribute('data-original-width');
+                buttonContainer.style.width = originalButtonWidth || '';
+                buttonContainer.removeAttribute('data-original-width');
+              }
+              
               // Artık vertical moda döndüğü için data attributelarını temizle
               postContainer.removeAttribute('data-original-max-width');
               postContainer.removeAttribute('data-original-width');
@@ -197,6 +228,9 @@
           }
         }
       }
+      
+      // Buton konumunu ayarla
+      adjustButtonPosition(isHorizontal);
     });
     
     // Show/hide button on hover with scale effect
@@ -228,12 +262,40 @@
       container.style.position = 'relative';
     }
     
+    // Buton container'ının genişlediğinde butonun konumunu korumak için
+    // Container'ın genişlik değişikliklerini dinle
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        // Container genişlediğinde buton konumunu yeniden ayarla
+        const currentRotation = parseInt(video.dataset.rotation || '0', 10);
+        const isHorizontal = currentRotation === 90 || currentRotation === 270;
+        
+        if (isHorizontal) {
+          // Yatay modda buton konumunu container genişliğine göre ayarla
+          const containerWidth = entry.contentRect.width;
+          const videoWidth = video.offsetWidth;
+          
+          // Buton konumunu container'ın sol tarafından 12px mesafede tut
+          rotateButton.style.left = '12px';
+          rotateButton.style.top = '12px';
+        }
+      }
+    });
+    
+    // Container'ı observe et
+    resizeObserver.observe(container);
+    
     // Add hover listeners
     container.addEventListener('mouseenter', showButton);
     container.addEventListener('mouseleave', hideButton);
     
     // Add button to container
     container.appendChild(rotateButton);
+    
+    // Cleanup function
+    video.addEventListener('beforeunload', () => {
+      resizeObserver.disconnect();
+    });
   }
   
   function processVideos() {
