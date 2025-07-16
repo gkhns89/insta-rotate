@@ -78,31 +78,71 @@
       video.style.transformOrigin = 'center';
       video.dataset.rotation = currentRotation.toString();
       
-      // Container genişletme - sadece yatay modda
+      // Container genişletme - Reels ve normal akış için farklı yaklaşımlar
       const isHorizontal = currentRotation === 90 || currentRotation === 270;
       
-      // Video'nun bulunduğu ana container'ı bul
-      const videoContainer = video.closest('div[style*="max-width"]') || 
-                            video.closest('div[style*="width"]') ||
-                            video.closest('article');
+      // Reels sayfasında mıyız kontrol et
+      const isReelsPage = window.location.pathname.includes('/reels/') || 
+                         document.querySelector('div[role="dialog"]') ||
+                         video.closest('div[style*="height: 100vh"]');
       
-      if (videoContainer) {
-        if (isHorizontal) {
-          // Yatay mod - genişlet
-          videoContainer.style.maxWidth = '700px';
-          videoContainer.style.width = '700px';
-          videoContainer.setAttribute('data-original-max-width', videoContainer.style.maxWidth || '');
-          videoContainer.setAttribute('data-original-width', videoContainer.style.width || '');
-        } else {
-          // Dik mod - eski haline döndür
-          const originalMaxWidth = videoContainer.getAttribute('data-original-max-width');
-          const originalWidth = videoContainer.getAttribute('data-original-width');
+      if (isReelsPage) {
+        // REELS için container genişletme
+        const reelsContainer = video.closest('div[style*="max-width"]') || 
+                              video.closest('div[style*="width"]') ||
+                              video.closest('div[role="dialog"]');
+        
+        if (reelsContainer) {
+          if (isHorizontal) {
+            // Yatay mod - genişlet
+            if (!reelsContainer.hasAttribute('data-original-max-width')) {
+              reelsContainer.setAttribute('data-original-max-width', reelsContainer.style.maxWidth || '');
+              reelsContainer.setAttribute('data-original-width', reelsContainer.style.width || '');
+            }
+            reelsContainer.style.maxWidth = '700px';
+            reelsContainer.style.width = '700px';
+          } else {
+            // Dik mod - eski haline döndür
+            const originalMaxWidth = reelsContainer.getAttribute('data-original-max-width');
+            const originalWidth = reelsContainer.getAttribute('data-original-width');
+            
+            reelsContainer.style.maxWidth = originalMaxWidth || '';
+            reelsContainer.style.width = originalWidth || '';
+            
+            reelsContainer.removeAttribute('data-original-max-width');
+            reelsContainer.removeAttribute('data-original-width');
+          }
+        }
+      } else {
+        // NORMAL AKIŞ için container genişletme
+        const article = video.closest('article');
+        if (article) {
+          // Ana post container'ını bul
+          const postContainer = article.querySelector('div[style*="max-width"]') || 
+                               article.querySelector('div[style*="width: 470px"]') ||
+                               article.querySelector('div[style*="width: 540px"]');
           
-          videoContainer.style.maxWidth = originalMaxWidth || '';
-          videoContainer.style.width = originalWidth || '';
-          
-          videoContainer.removeAttribute('data-original-max-width');
-          videoContainer.removeAttribute('data-original-width');
+          if (postContainer) {
+            if (isHorizontal) {
+              // Yatay mod - genişlet
+              if (!postContainer.hasAttribute('data-original-max-width')) {
+                postContainer.setAttribute('data-original-max-width', postContainer.style.maxWidth || '');
+                postContainer.setAttribute('data-original-width', postContainer.style.width || '');
+              }
+              postContainer.style.maxWidth = '700px';
+              postContainer.style.width = '700px';
+            } else {
+              // Dik mod - eski haline döndür
+              const originalMaxWidth = postContainer.getAttribute('data-original-max-width');
+              const originalWidth = postContainer.getAttribute('data-original-width');
+              
+              postContainer.style.maxWidth = originalMaxWidth || '';
+              postContainer.style.width = originalWidth || '';
+              
+              postContainer.removeAttribute('data-original-max-width');
+              postContainer.removeAttribute('data-original-width');
+            }
+          }
         }
       }
     });
