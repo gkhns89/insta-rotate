@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Instagram Video Rotator",
-  "version": "3.2.0",
+  "version": "4.2.0",
   "author": "G.Codes",
   "description": "Instagram masaüstü versiyonunda yatay videoları izlemeyi kolaylaştırır.",
   "permissions": ["activeTab"],
