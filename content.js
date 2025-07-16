@@ -117,27 +117,68 @@
         // NORMAL AKIŞ için container genişletme
         const article = video.closest('article');
         if (article) {
-          // Ana post container'ını bul
-          const postContainer = article.querySelector('div[style*="max-width"]') || 
-                               article.querySelector('div[style*="width: 470px"]') ||
-                               article.querySelector('div[style*="width: 540px"]');
+          // Farklı container tiplerini dene
+          let postContainer = null;
+          
+          // 1. Önce direkt max-width olan container'ı ara
+          postContainer = article.querySelector('div[style*="max-width"]');
+          
+          // 2. Yoksa width ile belirlenmiş container'ı ara
+          if (!postContainer) {
+            postContainer = article.querySelector('div[style*="width: 470px"]') || 
+                           article.querySelector('div[style*="width: 540px"]') ||
+                           article.querySelector('div[style*="width: 630px"]');
+          }
+          
+          // 3. Yoksa video'nun direkt parent container'ını ara
+          if (!postContainer) {
+            let currentElement = video.parentElement;
+            while (currentElement && currentElement !== article) {
+              const computedStyle = window.getComputedStyle(currentElement);
+              if (computedStyle.maxWidth && computedStyle.maxWidth !== 'none') {
+                postContainer = currentElement;
+                break;
+              }
+              currentElement = currentElement.parentElement;
+            }
+          }
+          
+          // 4. Son çare: article'ın ilk div child'ını kullan
+          if (!postContainer) {
+            const children = Array.from(article.children);
+            postContainer = children.find(child => child.tagName === 'DIV');
+          }
           
           if (postContainer) {
             if (isHorizontal) {
               // Yatay mod - genişlet
               if (!postContainer.hasAttribute('data-original-max-width')) {
-                postContainer.setAttribute('data-original-max-width', postContainer.style.maxWidth || '');
-                postContainer.setAttribute('data-original-width', postContainer.style.width || '');
+                const currentMaxWidth = postContainer.style.maxWidth || 
+                                       window.getComputedStyle(postContainer).maxWidth;
+                const currentWidth = postContainer.style.width || 
+                                    window.getComputedStyle(postContainer).width;
+                
+                postContainer.setAttribute('data-original-max-width', currentMaxWidth);
+                postContainer.setAttribute('data-original-width', currentWidth);
               }
-              postContainer.style.maxWidth = '700px';
-              postContainer.style.width = '700px';
+              postContainer.style.maxWidth = '700px !important';
+              postContainer.style.width = '700px !important';
             } else {
               // Dik mod - eski haline döndür
               const originalMaxWidth = postContainer.getAttribute('data-original-max-width');
               const originalWidth = postContainer.getAttribute('data-original-width');
               
-              postContainer.style.maxWidth = originalMaxWidth || '';
-              postContainer.style.width = originalWidth || '';
+              if (originalMaxWidth && originalMaxWidth !== 'none') {
+                postContainer.style.maxWidth = originalMaxWidth;
+              } else {
+                postContainer.style.maxWidth = '';
+              }
+              
+              if (originalWidth && originalWidth !== 'auto') {
+                postContainer.style.width = originalWidth;
+              } else {
+                postContainer.style.width = '';
+              }
               
               postContainer.removeAttribute('data-original-max-width');
               postContainer.removeAttribute('data-original-width');
