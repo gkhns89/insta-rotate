@@ -152,6 +152,7 @@
           if (postContainer) {
             if (isHorizontal) {
               // Yatay mod - genişlet
+              // Orijinal değerleri SADECE İLK DEFA horizontal moda geçerken sakla
               if (!postContainer.hasAttribute('data-original-max-width')) {
                 const currentMaxWidth = postContainer.style.maxWidth || 
                                        window.getComputedStyle(postContainer).maxWidth;
@@ -161,8 +162,14 @@
                 postContainer.setAttribute('data-original-max-width', currentMaxWidth);
                 postContainer.setAttribute('data-original-width', currentWidth);
               }
-              postContainer.style.maxWidth = '700px !important';
-              postContainer.style.width = '700px !important';
+              
+              // 16:9 videolar için yeterli genişlik - 580px kullan
+              postContainer.style.maxWidth = '580px !important';
+              postContainer.style.width = '580px !important';
+              
+              // Responsive behavior için min-width de ekle
+              postContainer.style.minWidth = '580px';
+              
             } else {
               // Dik mod - eski haline döndür
               const originalMaxWidth = postContainer.getAttribute('data-original-max-width');
@@ -180,6 +187,10 @@
                 postContainer.style.width = '';
               }
               
+              // min-width'i de temizle
+              postContainer.style.minWidth = '';
+              
+              // Artık vertical moda döndüğü için data attributelarını temizle
               postContainer.removeAttribute('data-original-max-width');
               postContainer.removeAttribute('data-original-width');
             }
