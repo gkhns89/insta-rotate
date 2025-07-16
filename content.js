@@ -36,30 +36,33 @@
     rotateButton.className = 'instagram-video-rotator-btn';
     rotateButton.setAttribute('aria-label', 'Videoyu döndür');
     rotateButton.style.cssText = `
-      background: rgba(0, 0, 0, 0.8);
-      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      left: 12px;
       cursor: pointer;
       z-index: 9999;
       transition: all 0.3s ease;
       opacity: 0;
       pointer-events: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
     `;
     
-    // Rotate icon
+    // Rotate icon - Daha belirgin dönen ok ikonu
     rotateButton.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-        <path d="M12 2l3.09 3.09L9.91 10.4l-.7-.7L12 7.76V2zm3.09 15.91L12 14.76V20l-2.79-2.79-.7.7 5.18 5.18L18.18 18.18l-.7-.7L12 22.24V17.76l3.09 3.09z"/>
-        <path d="M7.34 6.41l.7-.7L12 9.66l3.96-3.95.7.7L12 11.07 7.34 6.41z"/>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M1 4v6h6"/>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        <path d="M23 20v-6h-6"/>
+        <path d="M20.49 9a9 9 0 1 0-2.13 9.36L23 14"/>
       </svg>
     `;
     
@@ -97,16 +100,29 @@
       }
     });
     
-    // Show/hide button on hover
+    // Show/hide button on hover with scale effect
     const showButton = () => {
       rotateButton.style.opacity = '1';
       rotateButton.style.pointerEvents = 'auto';
+      rotateButton.style.transform = 'scale(1)';
     };
     
     const hideButton = () => {
       rotateButton.style.opacity = '0';
       rotateButton.style.pointerEvents = 'none';
+      rotateButton.style.transform = 'scale(0.8)';
     };
+    
+    // Hover effect for the button itself
+    rotateButton.addEventListener('mouseenter', () => {
+      rotateButton.style.transform = 'scale(1.1)';
+      rotateButton.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.6)';
+    });
+    
+    rotateButton.addEventListener('mouseleave', () => {
+      rotateButton.style.transform = 'scale(1)';
+      rotateButton.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.4)';
+    });
     
     // Set container position if needed
     if (getComputedStyle(container).position === 'static') {
