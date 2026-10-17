@@ -117,7 +117,7 @@
     <svg class="video" viewBox="0 0 160 90"><use href="#scene" width="160" height="90"/></svg>
     <div style="position:absolute;left:20px;top:18px;display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.5)">
       <span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#d6ecf5,#7cc4e3,#1e87b4);padding:2px;display:inline-block"><span style="display:block;width:100%;height:100%;border-radius:50%;background:#2a3033;border:2px solid #131719"></span></span>
-      kullanici_adi
+      <span data-t>kullanici_adi</span>
     </div>
     <div class="rbtn on" style="right:18px;top:193px"><svg><use href="#rot"/></svg></div>
     <svg class="ui-ico" style="position:absolute;right:18px;bottom:18px;width:30px;height:30px" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
@@ -131,7 +131,7 @@
   </div>
 
   <div style="position:absolute;left:1000px;top:268px;width:250px">
-    <div style="font-size:17px;line-height:1.4;color:#e4f1f7;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px">
+    <div data-t style="font-size:17px;line-height:1.4;color:#e4f1f7;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px">
       Tekrar tıklayın: <b>180°</b>, <b>270°</b> ve orijinal.<br><span style="color:#82a1aa">Shift + tık: ters yöne</span>
     </div>
   </div>
@@ -188,7 +188,7 @@
   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px">
     <img src="../logo.svg" style="width:96px;height:96px">
     <div style="font-size:26px;font-weight:800;letter-spacing:-.5px">Video Rotator for Instagram</div>
-    <div style="font-size:17px;color:#aebccf">Yan yatmış videoları <span class="grad" style="font-weight:700">tek tıkla</span> düzeltin</div>
+    <div data-t style="font-size:17px;color:#aebccf">Yan yatmış videoları <span class="grad" style="font-weight:700">tek tıkla</span> düzeltin</div>
   </div>
 </section>
 
@@ -220,7 +220,45 @@
 </section>
 
 <script>
-  const id = location.hash.slice(1) || 's1';
+  // Adres: assets.html#<bölüm>[/en]  ör. #s1, #s1/en, #tile/en
+  const EN = {
+    'Yan yatmış videoları <span class="grad">tek tıkla</span> düzeltin.': 'Fix sideways videos <span class="grad">in one click</span>.',
+    'Dik tutularak çekilmiş yatay videoları döndürün ve masaüstünde yatay modda rahatça izleyin.': 'Rotate videos that were filmed sideways and watch them in landscape mode on desktop.',
+    'Akış': 'Feed',
+    'Gönderiler': 'Posts',
+    'Önce': 'Before',
+    'Sonra': 'After',
+    "Reels'te <span class=\"grad\">gerçek yatay mod</span>": 'Real <span class="grad">landscape mode</span> on Reels',
+    'Video genişler; beğen, yorum, paylaş ve ses butonları yeni boyuta göre yerleşir.': 'The video widens; like, comment, share and sound controls follow the new size.',
+    'kullanici_adi': 'username',
+    'Tekrar tıklayın: <b>180°</b>, <b>270°</b> ve orijinal.<br><span style="color:#82a1aa">Shift + tık: ters yöne</span>': 'Click again: <b>180°</b>, <b>270°</b> and original.<br><span style="color:#82a1aa">Shift + click: other direction</span>',
+    'Basit, hafif <span class="grad">ve güvenli</span>': 'Simple, light <span class="grad">and private</span>',
+    'Her video bağımsız': 'Each video on its own',
+    'Sadece izlediğiniz video döner, diğer videolar etkilenmez.': 'Only the video you are watching rotates; the others stay as they are.',
+    'Otomatik sıfırlama': 'Auto reset',
+    'Sonraki videoya geçtiğinizde video kendiliğinden eski haline döner.': 'Move on to the next video and it returns to normal by itself.',
+    'Akıllı buton konumu': 'Smart button placement',
+    'Buton; isim, menü ve ses gibi Instagram öğelerinin üstüne binmez.': 'The button stays clear of names, menus and sound controls.',
+    'Düzen bozulmaz': 'Layout stays intact',
+    'Ana sayfa akışında video kendi kutusunun içinde döner, sayfa kaymaz.': 'In the home feed the video rotates inside its own box; nothing shifts.',
+    'Veri toplamaz': 'No data collected',
+    'Hiçbir kişisel veri toplanmaz; uzantı hiçbir sunucuya bağlanmaz.': 'No personal data is collected; the extension never contacts a server.',
+    'Ayar gerektirmez': 'No setup needed',
+    'Kurun ve kullanın. Videonun üzerine gelin, butona tıklayın.': 'Install and go. Hover over a video and click the button.',
+    'Yan yatmış videoları <span class="grad" style="font-weight:700">tek tıkla</span> düzeltin': 'Fix sideways videos <span class="grad" style="font-weight:700">in one click</span>',
+    'Reels, akış ve gönderilerde yatay modda izleyin.': 'Watch Reels, feed and post videos in landscape mode.'
+  };
+  const [id, lang] = (location.hash.slice(1) || 's1').split('/');
+  if (lang === 'en') {
+    document.documentElement.lang = 'en';
+    const missing = [];
+    for (const el of document.querySelectorAll('h1, h2, h3, p, .label, .chip, [data-t]')) {
+      const key = el.innerHTML.trim();
+      if (key in EN) el.innerHTML = EN[key];
+      else if (key !== 'Reels') missing.push(key);
+    }
+    if (missing.length) document.title = 'MISSING: ' + missing.join(' | ');
+  }
   document.getElementById(id).classList.add('on');
 </script>
 </body></html>

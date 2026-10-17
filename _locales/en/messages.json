@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Video Rotator for Instagram"
+  },
+  "extDescription": {
+    "message": "Rotate sideways Instagram videos on desktop with one click and watch them in landscape mode."
+  },
+  "rotateLabel": {
+    "message": "Rotate video"
+  },
+  "rotateTitle": {
+    "message": "Rotate video (Shift + click: other direction)"
+  }
+}

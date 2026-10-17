@@ -86,11 +86,21 @@
   `;
   (document.head || document.documentElement).appendChild(style);
 
+  // Metinler _locales/<dil>/messages.json'dan gelir; uzantı dışında (test
+  // sayfası) chrome.i18n yoksa İngilizce yedeğe düşer.
+  function t(key, fallback) {
+    try {
+      return chrome.i18n.getMessage(key) || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'ivr-btn';
-  button.setAttribute('aria-label', 'Videoyu döndür');
-  button.title = 'Videoyu döndür (Shift + tık: ters yöne)';
+  button.setAttribute('aria-label', t('rotateLabel', 'Rotate video'));
+  button.title = t('rotateTitle', 'Rotate video (Shift + click: other direction)');
   // logo.svg'nin dış çerçeve ve "90" rozeti olmadan hali. viewBox, ok
   // ucu dahil her şey yuvarlak butonun içine sığacak şekilde ortalanmış.
   button.innerHTML = `
