@@ -7,7 +7,8 @@ Bu klasördeki görseller `assets.html` dosyasından üretilir (headless Chrome 
 | `screenshot-1-oncesi-sonrasi.png` | Ekran görüntüsü 1 |
 | `screenshot-2-reels-yatay-mod.png` | Ekran görüntüsü 2 |
 | `screenshot-3-ozellikler.png` | Ekran görüntüsü 3 |
-| `promo-small-440x280.png` | Küçük tanıtım kutusu |
+| `promo-small-440x280.png` | Küçük tanıtım bloğu |
+| `promo-marquee-1400x560.png` | Kayan yazı tanıtım bloğu |
 | `../icon128.png` | Mağaza simgesi |
 
 ---
@@ -44,6 +45,13 @@ Bu uzantı Instagram veya Meta ile bağlantılı değildir; onlar tarafından de
 
 Video Rotator for Instagram lets you rotate sideways videos on Instagram desktop with one click and watch them in true landscape mode. Hover over a video and click the rotate button. On Reels and post dialogs the video widens and Instagram's controls follow the new size; the video returns to normal when you move on. No data is collected. Not affiliated with Instagram or Meta.
 ```
+
+### Ek alanlar
+
+- **Resmi URL:** Yok (Google Search Console'da doğrulanmış bir site eklenirse seçilebilir)
+- **Ana sayfa URL'si:** `https://github.com/gkhns89/insta-rotate`
+- **Destek URL'si:** `https://github.com/gkhns89/insta-rotate/issues`
+- **Yetişkinlere yönelik içerik:** Kapalı
 
 ---
 

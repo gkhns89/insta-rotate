@@ -192,6 +192,33 @@
   </div>
 </section>
 
+<!-- Kayan yazı tanıtım bloğu 1400x560 -->
+<section class="shot marquee" id="marquee" style="width:1400px;height:560px">
+  <div class="glow" style="width:520px;height:520px;left:-160px;top:-220px;background:#1e87b4"></div>
+  <div class="glow" style="width:560px;height:560px;right:-140px;bottom:-300px;background:#155f80"></div>
+
+  <div style="position:absolute;left:90px;top:0;bottom:0;width:560px;display:flex;flex-direction:column;justify-content:center">
+    <div class="brand"><img src="../logo.svg"><span>Video Rotator for Instagram<span style="display:block;font-size:14px;font-weight:500;color:#82a1aa;margin-top:2px">by G.Codes</span></span></div>
+    <h1 style="margin-top:40px;font-size:54px">Yan yatmış videoları <span class="grad">tek tıkla</span> düzeltin.</h1>
+    <p class="sub" style="margin-top:20px;font-size:21px">Reels, akış ve gönderilerde yatay modda izleyin.</p>
+  </div>
+
+  <div class="frame" style="position:absolute;left:760px;top:100px;width:202px;height:360px">
+    <svg class="video" viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice"><g transform="translate(90,0) rotate(90)"><use href="#scene" width="160" height="90"/></g></svg>
+    <div class="rbtn" style="right:12px;top:154px"><svg><use href="#rot"/></svg></div>
+  </div>
+
+  <svg style="position:absolute;left:988px;top:262px" width="54" height="40" viewBox="0 0 54 40" fill="none">
+    <defs><linearGradient id="ar2" x1="0" x2="1"><stop offset="0" stop-color="#7cc4e3"/><stop offset="1" stop-color="#1e87b4"/></linearGradient></defs>
+    <path d="M4 20 H46 M32 6 L48 20 L32 34" stroke="url(#ar2)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="frame" style="position:absolute;left:1068px;top:186px;width:300px;height:169px">
+    <svg class="video" viewBox="0 0 160 90"><use href="#scene" width="160" height="90"/></svg>
+    <div class="rbtn on" style="right:12px;top:58px"><svg><use href="#rot"/></svg></div>
+  </div>
+</section>
+
 <script>
   const id = location.hash.slice(1) || 's1';
   document.getElementById(id).classList.add('on');
