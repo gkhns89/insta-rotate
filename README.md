@@ -1,10 +1,12 @@
 # Instagram Video Rotator
 
-**Sürüm:** 1.1  
+**Sürüm:** 5.0.0  
 **Açıklama:** Instagram Video Rotator, masaüstü Instagram kullanıcılarının yatay videoları daha kolay izleyebilmesi için videoları döndürme özelliği sunan bir Chrome uzantısıdır.
 
 ## Özellikler
-- Instagram videolarını masaüstünde doğrudan döndürme.
+- Videonun üzerine gelince çıkan butonla o videoyu 90° döndürme (Shift + tık: ters yöne).
+- Reels ve gönderi pencerelerinde döndürülen video yatay moda genişler, Instagram butonları yeni boyuta göre yerleşir.
+- Sonraki videoya geçildiğinde video otomatik olarak eski haline döner.
 - Ekstra ayar gerektirmeyen basit ve hafif bir uzantı.
 
 ## Kurulum
@@ -13,9 +15,7 @@
 3. Uzantıyı yüklemek için "Chrome'a Ekle" butonuna tıklayın.
 
 ## İzinler
-- **activeTab:** Geçerli sekmeyle etkileşim kurmak ve video döndürme işlevi için gerekli komutları çalıştırmak amacıyla kullanılır.
-- **scripting:** Instagram videolarını döndürmek için gereken scriptleri enjekte etmek ve çalıştırmak için gereklidir.
-- **Ana Makine İzni:** Erişim `https://www.instagram.com/*` ile sınırlandırılmıştır ve uzantının yalnızca Instagram'da çalışmasını sağlar.
+- Uzantı ek bir izin istemez. Script yalnızca `https://www.instagram.com/*` sayfalarında çalışır.
 
 ## Gizlilik Politikası
 **Yürürlük Tarihi:** Ocak 2025  
@@ -34,17 +34,19 @@ Uzantı, yalnızca Instagram'da videoları döndürmek için gerekli olan script
 Bu proje [MIT Lisansı](https://opensource.org/licenses/MIT) altında lisanslanmıştır.
 
 ## Destek
-Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [GitHub deposunda](https://github.com/gkhns89/instagram-video-rotator) bir sorun bildirin.
+Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [GitHub deposunda](https://github.com/gkhns89/insta-rotate) bir sorun bildirin.
 
 ---
 
 # Instagram Video Rotator
 
-**Version:** 1.1  
+**Version:** 5.0.0  
 **Description:** Instagram Video Rotator is a Chrome extension that helps desktop Instagram users easily rotate horizontal videos for better viewing.
 
 ## Features
-- Rotate Instagram videos directly on the desktop.
+- Rotate the video under the cursor by 90° with the hover button (Shift + click: other direction).
+- On Reels and post dialogs, the rotated video widens into landscape mode and Instagram's controls follow the new size.
+- The video automatically returns to normal when you move on to the next one.
 - Simple and lightweight extension with no extra settings required.
 
 ## Installation
@@ -53,9 +55,7 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 3. Click the "Add to Chrome" button to install the extension.
 
 ## Permissions
-- **activeTab:** Used to interact with the current tab and execute commands necessary for video rotation.
-- **scripting:** Required to inject and execute scripts for rotating Instagram videos.
-- **Host Permission:** Restricted to `https://www.instagram.com/*` so that the extension only works on Instagram.
+- The extension requests no extra permissions. Its script runs only on `https://www.instagram.com/*` pages.
 
 ## Privacy Policy
 **Effective Date:** January 2025  
@@ -74,4 +74,4 @@ The extension executes necessary scripts only to rotate videos on Instagram. Thi
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Support
-If you encounter any issues or have questions, please report them on the [GitHub repository](https://github.com/gkhns89/instagram-video-rotator).
+If you encounter any issues or have questions, please report them on the [GitHub repository](https://github.com/gkhns89/insta-rotate).
