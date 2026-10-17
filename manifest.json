@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Instagram Video Rotator",
+  "name": "Video Rotator for Instagram",
   "version": "5.0.0",
   "author": "G.Codes",
   "description": "Instagram masaüstü versiyonunda yan çekilmiş videoları döndürüp yatay modda izlemenizi sağlar.",

@@ -38,7 +38,7 @@
       box-sizing: border-box;
       border: 1.5px solid rgba(255, 255, 255, 0.22);
       border-radius: 50%;
-      background: rgba(20, 20, 20, 0.5);
+      background: rgba(19, 23, 25, 0.55);
       -webkit-backdrop-filter: blur(14px) saturate(160%);
       backdrop-filter: blur(14px) saturate(160%);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -54,20 +54,20 @@
       transform: scale(1);
     }
     .ivr-btn.ivr-show:hover {
-      background-color: rgba(20, 20, 20, 0.68);
+      background-color: rgba(19, 23, 25, 0.72);
       transform: scale(1.08);
     }
     .ivr-btn.ivr-show:active {
       transform: scale(0.94);
     }
-    /* Döndürülmüşken kenar Instagram renk geçişine döner. */
+    /* Döndürülmüşken kenar G.Codes mavisi halkaya döner. */
     .ivr-btn::before {
       content: '';
       position: absolute;
       inset: -1.5px;
       padding: 2px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #ffb300, #ff6a00, #ee1a6a, #b52fb8, #6a3de8);
+      background: linear-gradient(45deg, #1e87b4, #7cc4e3, #d6ecf5);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -97,20 +97,13 @@
     <svg viewBox="18 18 92 92" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ivr-arc" gradientUnits="userSpaceOnUse" x1="100" y1="28" x2="34" y2="98">
-          <stop offset="0" stop-color="#6a3de8"/>
-          <stop offset="0.3" stop-color="#b52fb8"/>
-          <stop offset="0.55" stop-color="#ee1a6a"/>
-          <stop offset="0.8" stop-color="#ff6a00"/>
-          <stop offset="1" stop-color="#ffb300"/>
-        </linearGradient>
-        <linearGradient id="ivr-play" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#7a3fe0"/>
-          <stop offset="0.55" stop-color="#ee1a6a"/>
-          <stop offset="1" stop-color="#ff7a00"/>
+          <stop offset="0" stop-color="#d6ecf5"/>
+          <stop offset="0.35" stop-color="#7cc4e3"/>
+          <stop offset="1" stop-color="#1e87b4"/>
         </linearGradient>
       </defs>
       <path d="M34.5 64A29.5 29.5 0 1 0 39.26 47.93L36.5 34.5" fill="none" stroke="url(#ivr-arc)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M56.5 56L56.5 72L71.5 64Z" fill="url(#ivr-play)" stroke="url(#ivr-play)" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M56.5 56L56.5 72L71.5 64Z" fill="#a9c2c9" stroke="#a9c2c9" stroke-width="7" stroke-linejoin="round"/>
     </svg>
   `;
   (document.body || document.documentElement).appendChild(button);

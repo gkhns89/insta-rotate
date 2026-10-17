@@ -20,7 +20,7 @@ Bu klasördeki görseller `assets.html` dosyasından üretilir (headless Chrome 
 ### Açıklama
 
 ```
-Dik tutularak çekilmiş ama aslında yatay olan videolar Instagram'da yan yatmış mı görünüyor? Instagram Video Rotator ile izlediğiniz videoyu tek tıkla döndürün ve masaüstünde yatay modda rahatça izleyin.
+Dik tutularak çekilmiş ama aslında yatay olan videolar Instagram'da yan yatmış mı görünüyor? Video Rotator for Instagram ile izlediğiniz videoyu tek tıkla döndürün ve masaüstünde yatay modda rahatça izleyin.
 
 NASIL KULLANILIR
 • Instagram'da bir videonun üzerine gelin; videonun kenarında döndürme butonu belirir.
@@ -42,7 +42,7 @@ Bu uzantı Instagram veya Meta ile bağlantılı değildir; onlar tarafından de
 
 ---
 
-Instagram Video Rotator lets you rotate sideways videos on Instagram desktop with one click and watch them in true landscape mode. Hover over a video and click the rotate button. On Reels and post dialogs the video widens and Instagram's controls follow the new size; the video returns to normal when you move on. No data is collected. Not affiliated with Instagram or Meta.
+Video Rotator for Instagram lets you rotate sideways videos on Instagram desktop with one click and watch them in true landscape mode. Hover over a video and click the rotate button. On Reels and post dialogs the video widens and Instagram's controls follow the new size; the video returns to normal when you move on. No data is collected. Not affiliated with Instagram or Meta.
 ```
 
 ---

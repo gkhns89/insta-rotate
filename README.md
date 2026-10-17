@@ -1,7 +1,7 @@
-# Instagram Video Rotator
+# Video Rotator for Instagram
 
 **Sürüm:** 5.0.0  
-**Açıklama:** Instagram Video Rotator, masaüstü Instagram kullanıcılarının yatay videoları daha kolay izleyebilmesi için videoları döndürme özelliği sunan bir Chrome uzantısıdır.
+**Açıklama:** Video Rotator for Instagram, masaüstü Instagram kullanıcılarının yatay videoları daha kolay izleyebilmesi için videoları döndürme özelliği sunan bir Chrome uzantısıdır.
 
 ## Özellikler
 - Videonun üzerine gelince çıkan butonla o videoyu 90° döndürme (Shift + tık: ters yöne).
@@ -11,7 +11,7 @@
 
 ## Kurulum
 1. [Chrome Web Mağazası](https://chrome.google.com/webstore)'na gidin.
-2. "Instagram Video Rotator" aramasını yapın.
+2. "Video Rotator for Instagram" aramasını yapın.
 3. Uzantıyı yüklemek için "Chrome'a Ekle" butonuna tıklayın.
 
 ## İzinler
@@ -19,7 +19,7 @@
 
 ## Gizlilik Politikası
 **Yürürlük Tarihi:** Ocak 2025  
-Instagram Video Rotator uzantısı hiçbir kişisel bilgi, tarama geçmişi veya kullanıcı verisi toplamaz, saklamaz veya paylaşmaz. Uzantı yalnızca Instagram masaüstü sitesinde çalışır ve herhangi bir veri dış sunuculara veya üçüncü taraflara iletilmez.
+Video Rotator for Instagram uzantısı hiçbir kişisel bilgi, tarama geçmişi veya kullanıcı verisi toplamaz, saklamaz veya paylaşmaz. Uzantı yalnızca Instagram masaüstü sitesinde çalışır ve herhangi bir veri dış sunuculara veya üçüncü taraflara iletilmez.
 
 ### Veri Toplama
 Bu uzantı kullanıcı verilerini toplamaz, işlemez veya saklamaz.
@@ -30,6 +30,9 @@ Bu uzantı üçüncü taraf hizmetlere veya kuruluşlara erişim sağlamaz.
 ### Kullanım
 Uzantı, yalnızca Instagram'da videoları döndürmek için gerekli olan scriptleri çalıştırır. Bu işlem, kullanıcı tarafından açıkça başlatıldığında aktif sekmede gerçekleştirilir.
 
+## Feragatname
+Bu uzantı Instagram veya Meta ile bağlantılı değildir; onlar tarafından desteklenmez veya onaylanmaz. Instagram, Meta Platforms, Inc. şirketinin ticari markasıdır.
+
 ## Lisans
 Bu proje [MIT Lisansı](https://opensource.org/licenses/MIT) altında lisanslanmıştır.
 
@@ -38,10 +41,10 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 
 ---
 
-# Instagram Video Rotator
+# Video Rotator for Instagram
 
 **Version:** 5.0.0  
-**Description:** Instagram Video Rotator is a Chrome extension that helps desktop Instagram users easily rotate horizontal videos for better viewing.
+**Description:** Video Rotator for Instagram is a Chrome extension that helps desktop Instagram users easily rotate horizontal videos for better viewing.
 
 ## Features
 - Rotate the video under the cursor by 90° with the hover button (Shift + click: other direction).
@@ -51,7 +54,7 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 
 ## Installation
 1. Go to the [Chrome Web Store](https://chrome.google.com/webstore).
-2. Search for "Instagram Video Rotator."
+2. Search for "Video Rotator for Instagram."
 3. Click the "Add to Chrome" button to install the extension.
 
 ## Permissions
@@ -59,7 +62,7 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 
 ## Privacy Policy
 **Effective Date:** January 2025  
-The Instagram Video Rotator extension does not collect, store, or share any personal information, browsing history, or user data. The extension operates solely on the Instagram desktop site and does not transmit any data to external servers or third parties.
+The Video Rotator for Instagram extension does not collect, store, or share any personal information, browsing history, or user data. The extension operates solely on the Instagram desktop site and does not transmit any data to external servers or third parties.
 
 ### Data Collection
 This extension does not collect, process, or store any user data.
@@ -69,6 +72,9 @@ This extension does not provide access to any third-party services or organizati
 
 ### Usage
 The extension executes necessary scripts only to rotate videos on Instagram. This action occurs in the active tab and is initiated explicitly by the user.
+
+## Disclaimer
+This extension is not affiliated with, endorsed by, or sponsored by Instagram or Meta. Instagram is a trademark of Meta Platforms, Inc.
 
 ## License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
