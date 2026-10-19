@@ -240,9 +240,41 @@
 
   // Keşfet / arama / profil ızgarasındaki küçük önizlemeler gönderiye giden
   // bir bağlantının içindedir; onlara buton gösterilmez. Video açılınca
-  // (Reels görüntüleyici, gönderi penceresi) bağlantı dışında olur.
+  // (Reels görüntüleyici, gönderi penceresi) bağlantı dışında olur. Ana
+  // sayfa akışında ızgara yoktur; oradaki videolar bağlantı içinde olsa da
+  // butonu alır.
   function isGridPreview(video) {
+    if (location.pathname === '/') return false;
     return !!video.closest('a[href]');
+  }
+
+  function intersects(a, b) {
+    return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  }
+
+  // Çerçevenin yüksekliği boyunca, solunda ve sağında ekranda görünen küçük
+  // öğeler (her örnek noktada en üstteki). DOM'da çerçevenin içinde olsa da
+  // dışına konumlanmış öğeler (ör. videonun sol altına asılı açıklama) dahil;
+  // çerçeveyi içeren kutular, sayfa boyu arka planlar ve zaten çerçeveyle
+  // çakışanlar sayılmaz.
+  function collectObstacles(frame, fr) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const maxArea = vw * vh * 0.2;
+    const found = new Set();
+    for (let y = Math.max(fr.top, 0) + 4; y < Math.min(fr.bottom, vh); y += 16) {
+      for (let x = 4; x < vw; x += 24) {
+        if (x >= fr.left && x <= fr.right) continue;
+        for (const el of document.elementsFromPoint(x, y)) {
+          if (button.contains(el) || el.contains(frame)) continue;
+          const r = el.getBoundingClientRect();
+          if (r.width * r.height > maxArea || r.width > vw / 2 || intersects(r, fr)) continue;
+          found.add(el);
+          break;
+        }
+      }
+    }
+    return [...found];
   }
 
   function isInDialog(el) {
@@ -320,13 +352,40 @@
       }
     };
     // Reels / dialog'da çerçeveyi Instagram'ın yatay video moduna benzer
-    // şekilde genişlet: sayfa düzeninde hiçbir şey taşmadan verilebilecek en
-    // büyük genişlik denenerek (ikiye bölerek) bulunur. Açıklama gibi esnek
-    // yan sütunlar bir yere kadar daralabilir. Yükseklik hiç değişmez;
+    // şekilde genişlet: sayfada hiçbir şeyi bozmadan verilebilecek en büyük
+    // genişlik denenerek (ikiye bölerek) bulunur. Yükseklik hiç değişmez;
     // böylece kaydırma ve snap konumları bozulmaz.
     let targetW = W;
     const maxW = Math.round(Math.min(H * ratio, window.innerWidth - 2 * EDGE));
     if (!isFeedPost(video) && row && row !== document.body && maxW > W + SIZE_TOLERANCE) {
+      // Videonun yanındaki görünür öğeler (açıklama, başlık, menü, butonlar)
+      // nasıl konumlanmış olurlarsa olsunlar: video üstlerine binmemeli,
+      // ekrandan çıkmamalı, birbirlerinin üstüne itilmemeli.
+      const obstacles = collectObstacles(frame, frameRect);
+      const before = obstacles.map((el) => el.getBoundingClientRect());
+      const vw = window.innerWidth;
+      const rowBefore = row.getBoundingClientRect();
+      const rowWasOnScreen = rowBefore.left >= 0 && rowBefore.right <= vw;
+      const layoutIntact = () => {
+        const fr = frame.getBoundingClientRect();
+        if (fr.left < EDGE || fr.right > vw - EDGE) return false;
+        // Satır (yorum paneli, butonlar dahil) ekrandaysa ekranda kalmalı.
+        const rr = row.getBoundingClientRect();
+        if (rowWasOnScreen && (rr.left < 0 || rr.right > vw)) return false;
+        const now = obstacles.map((el) => el.getBoundingClientRect());
+        for (let i = 0; i < now.length; i++) {
+          const r = now[i];
+          if (!r.width || !r.height) continue;
+          if (intersects(r, fr)) return false;
+          const b = before[i];
+          if (b.left >= 0 && b.right <= vw && (r.left < 0 || r.right > vw)) return false;
+          for (let j = i + 1; j < now.length; j++) {
+            if (now[j].width && intersects(r, now[j]) && !intersects(b, before[j])) return false;
+          }
+        }
+        return true;
+      };
+
       // Satırdan yukarı her kutunun genişletmeden önceki taşması; sayfada
       // zaten var olan taşmalar hesaba katılmasın.
       const path = [];
@@ -340,28 +399,51 @@
         .map((el) => ({ el, min: Math.min(el.getBoundingClientRect().width, SIBLING_MIN) }))
         .filter(({ min }) => min > 0);
 
-      const fits = (width) => {
+      // Instagram satırı ortalar; video iki yana büyür ve videoya bağlı
+      // açıklama da kayar. Bir tarafta yer yoksa satır yarım büyüme kadar
+      // kaydırılarak video yalnızca sağa (ya da sola) büyütülür.
+      const rowStyle = getComputedStyle(row);
+      const canShift = rowStyle.position === 'static' || rowStyle.position === 'relative';
+      const baseLeft = rowStyle.position === 'relative' ? parseFloat(rowStyle.left) || 0 : 0;
+      const shifts = canShift ? [0, 0.5, -0.5] : [0];
+      const place = (width, shift) => {
+        restoreStyles(st); // her deneme temiz başlar; satıra sadece kaydırırken dokunulur
         setWidths(width);
-        return path.every(({ box, before }) => contentSpan(box) - innerWidth(box) - before <= 1) &&
-          siblings.every(({ el, min }) => el.getBoundingClientRect().width >= min - 1);
+        if (shift) setStyles(st, row, { position: 'relative', left: `${baseLeft + (width - W) * shift}px` });
       };
+
+      let bestShift = 0;
+      const fits = (width) => shifts.some((shift) => {
+        place(width, shift);
+        const ok = path.every(({ box, before }) => contentSpan(box) - innerWidth(box) - before <= 1) &&
+          siblings.every(({ el, min }) => el.getBoundingClientRect().width >= min - 1) &&
+          layoutIntact();
+        if (ok) bestShift = shift;
+        return ok;
+      });
 
       if (fits(maxW)) {
         targetW = maxW;
       } else {
         let lo = W;
+        let loShift = 0;
         let hi = maxW;
         for (let i = 0; i < 8 && hi - lo > 8; i++) {
           const mid = Math.round((lo + hi) / 2);
-          if (fits(mid)) lo = mid;
-          else hi = mid;
+          if (fits(mid)) {
+            lo = mid;
+            loShift = bestShift;
+          } else {
+            hi = mid;
+          }
         }
         targetW = Math.max(W, lo - ROOM_MARGIN / 2);
+        bestShift = loShift;
       }
-      // Denemelerden kalan sarmalayıcı genişliklerini temizle.
-      restoreStyles(st);
+      place(targetW, targetW > W ? bestShift : 0);
+    } else {
+      setWidths(targetW);
     }
-    setWidths(targetW);
 
     if (getComputedStyle(video.parentElement).position === 'static') {
       setStyles(st, video.parentElement, { position: 'relative' });
