@@ -1,1 +1,5 @@
 dist/
+
+# İmza anahtarları ve imzalı paketler asla depoya girmez
+*.pem
+*.crx
