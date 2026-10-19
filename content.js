@@ -7,6 +7,7 @@
   const EDGE = 12;            // buton ile video kenarı arasındaki boşluk
   const MIN_VIDEO_SIZE = 120; // bundan küçük videolara (ör. önizleme) buton gösterme
   const SIZE_TOLERANCE = 2;   // "aynı boyutta" sayılacak piksel farkı
+  const ROOM_MARGIN = 32;     // genişlerken satırın kenarlarında bırakılan pay
 
   const states = new WeakMap(); // video -> durum
   const active = new Set();     // şu an döndürülmüş videoların durumları
@@ -213,6 +214,50 @@
            Math.abs(a.height - b.height) <= SIZE_TOLERANCE;
   }
 
+  // Akıştaki çocukların yatay olarak kapladığı genişlik (en soldakinin
+  // solundan en sağdakinin sağına; aradaki boşluklar dahil).
+  function contentSpan(box) {
+    let left = Infinity;
+    let right = -Infinity;
+    for (const child of box.children) {
+      const cs = getComputedStyle(child);
+      if (cs.display === 'none' || cs.position === 'absolute' || cs.position === 'fixed') continue;
+      const r = child.getBoundingClientRect();
+      if (!r.width) continue;
+      left = Math.min(left, r.left);
+      right = Math.max(right, r.right);
+    }
+    return right > left ? right - left : 0;
+  }
+
+  function innerWidth(box) {
+    const cs = getComputedStyle(box);
+    return box.getBoundingClientRect().width -
+      parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) -
+      parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+  }
+
+  // Video satırının taşmadan büyüyebileceği boş genişlik. Satırdan yukarı
+  // çıkılır; içeriği kendi genişliğini dolduran (boşluğu olmayan) kutular
+  // atlanır, boşluğu olan ilk kutunun boşluğu döner. Bulunamazsa null.
+  function findRoom(row) {
+    for (let box = row, i = 0; box && box !== document.body && i < 8; box = box.parentElement, i++) {
+      const span = contentSpan(box);
+      if (!span) continue;
+      const inner = innerWidth(box);
+      const free = inner - span;
+      if (free >= ROOM_MARGIN) return { box, inner, free };
+    }
+    return null;
+  }
+
+  // Keşfet / arama / profil ızgarasındaki küçük önizlemeler gönderiye giden
+  // bir bağlantının içindedir; onlara buton gösterilmez. Video açılınca
+  // (Reels görüntüleyici, gönderi penceresi) bağlantı dışında olur.
+  function isGridPreview(video) {
+    return !!video.closest('a[href]');
+  }
+
   function isInDialog(el) {
     return !!el.closest('[role="dialog"]');
   }
@@ -260,40 +305,66 @@
     // Döndürülmüş içeriğin en-boy oranı (genişlik / yükseklik).
     const ratio = video.videoHeight / video.videoWidth;
 
-    // Reels / dialog'da çerçeveyi Instagram'ın yatay video moduna benzer
-    // şekilde genişlet. Yükseklik hiç değişmez; böylece kaydırma ve
-    // snap konumları bozulmaz.
-    let targetW = W;
-    if (!isFeedPost(video)) {
-      const maxW = Math.max(W, window.innerWidth * (isInDialog(video) ? 0.5 : 0.6));
-      targetW = Math.round(Math.min(Math.max(W, H * ratio), maxW));
-    }
-
     // Genişlik verilmeden önce ölç: çerçeveyle aynı genişlikteki sabit
     // sarmalayıcılar da genişlemeli, yoksa çerçeve taşar ve yan butonların
-    // üstüne biner. İlk farklı genişlikte durulur (butonları içeren satır).
+    // üstüne biner. İlk farklı genişlikteki kutu, açıklamayı ve yan butonları
+    // da içeren satırdır.
     const wrappers = [];
-    if (targetW > W + SIZE_TOLERANCE) {
-      for (let el = frame.parentElement, i = 0; el && el !== document.body && i < 6; el = el.parentElement, i++) {
-        if (Math.abs(el.getBoundingClientRect().width - W) > SIZE_TOLERANCE) break;
-        wrappers.push(el);
+    let row = frame.parentElement;
+    for (let i = 0; row && row !== document.body && i < 6; row = row.parentElement, i++) {
+      if (Math.abs(row.getBoundingClientRect().width - W) > SIZE_TOLERANCE) break;
+      wrappers.push(row);
+    }
+
+    // Reels / dialog'da çerçeveyi Instagram'ın yatay video moduna benzer
+    // şekilde, sayfa düzeninde gerçekten boş olan genişlik kadar genişlet.
+    // Yükseklik hiç değişmez; böylece kaydırma ve snap konumları bozulmaz.
+    let targetW = W;
+    let room = null;
+    if (!isFeedPost(video) && row && row !== document.body) {
+      room = findRoom(row);
+      if (room) {
+        const maxW = Math.min(W + room.free - ROOM_MARGIN, window.innerWidth - 2 * EDGE);
+        targetW = Math.round(Math.max(W, Math.min(H * ratio, maxW)));
       }
     }
 
-    const widthProps = {
-      width: `${targetW}px`,
-      'min-width': `${targetW}px`,
-      'max-width': 'none',
-      'flex-shrink': '0'
+    const setWidths = (width) => {
+      const props = {
+        width: `${width}px`,
+        'min-width': `${width}px`,
+        'max-width': 'none',
+        'flex-shrink': '0'
+      };
+      for (const el of chain) {
+        // Video absolute olacağı için yüksekliği sabitle; aksi halde
+        // yüksekliği videodan gelen sarmalayıcılar çöker.
+        setStyles(st, el, { ...props, height: `${H}px` });
+      }
+      if (width > W + SIZE_TOLERANCE) {
+        for (const el of wrappers) setStyles(st, el, props);
+      }
     };
-
-    for (const el of chain) {
-      // Video absolute olacağı için yüksekliği sabitle; aksi halde
-      // yüksekliği videodan gelen sarmalayıcılar çöker.
-      setStyles(st, el, { ...widthProps, height: `${H}px` });
+    // Satırdan boş alanın bulunduğu kutuya kadar her kutunun genişletmeden
+    // önceki taşması; sayfada zaten var olan taşmalar hesaba katılmasın.
+    const path = [];
+    if (room && targetW > W) {
+      for (let box = row; box; box = box.parentElement) {
+        path.push({ box, before: contentSpan(box) - innerWidth(box) });
+        if (box === room.box) break;
+      }
     }
-    for (const el of wrappers) {
-      setStyles(st, el, widthProps);
+
+    setWidths(targetW);
+
+    // Tahmin tutmadıysa (ör. aradaki sabit genişlikli bir kutu taştıysa)
+    // taşan kadar daralt.
+    if (path.length) {
+      const overflow = Math.max(...path.map(({ box, before }) => contentSpan(box) - innerWidth(box) - Math.max(0, before)));
+      if (overflow > 1) {
+        targetW = Math.round(Math.max(W, targetW - overflow - ROOM_MARGIN / 2));
+        setWidths(targetW);
+      }
     }
 
     if (getComputedStyle(video.parentElement).position === 'static') {
@@ -360,6 +431,7 @@
       if (rect.width < MIN_VIDEO_SIZE || rect.height < MIN_VIDEO_SIZE) continue;
       if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) continue;
       if (dialog ? !dialog.contains(video) : isInDialog(video)) continue;
+      if (isGridPreview(video)) continue;
       stack ||= document.elementsFromPoint(x, y);
       if (!isVideoOnTop(video, x, y, stack)) continue;
 
@@ -483,6 +555,7 @@
       let bestScore = 0;
       for (const video of videos) {
         if (inDialogOnly && !dialogs.some((d) => d.contains(video))) continue;
+        if (isGridPreview(video)) continue;
         const rect = video.getBoundingClientRect();
         if (rect.width < MIN_VIDEO_SIZE || rect.height < MIN_VIDEO_SIZE) continue;
         const w = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
