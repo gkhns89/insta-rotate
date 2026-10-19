@@ -8,6 +8,7 @@
   const MIN_VIDEO_SIZE = 120; // bundan küçük videolara (ör. önizleme) buton gösterme
   const SIZE_TOLERANCE = 2;   // "aynı boyutta" sayılacak piksel farkı
   const ROOM_MARGIN = 32;     // genişlerken satırın kenarlarında bırakılan pay
+  const SIBLING_MIN = 260;    // genişlerken yan sütunların (açıklama) daralabileceği en dar hal
 
   const states = new WeakMap(); // video -> durum
   const active = new Set();     // şu an döndürülmüş videoların durumları
@@ -237,20 +238,6 @@
       parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
   }
 
-  // Video satırının taşmadan büyüyebileceği boş genişlik. Satırdan yukarı
-  // çıkılır; içeriği kendi genişliğini dolduran (boşluğu olmayan) kutular
-  // atlanır, boşluğu olan ilk kutunun boşluğu döner. Bulunamazsa null.
-  function findRoom(row) {
-    for (let box = row, i = 0; box && box !== document.body && i < 8; box = box.parentElement, i++) {
-      const span = contentSpan(box);
-      if (!span) continue;
-      const inner = innerWidth(box);
-      const free = inner - span;
-      if (free >= ROOM_MARGIN) return { box, inner, free };
-    }
-    return null;
-  }
-
   // Keşfet / arama / profil ızgarasındaki küçük önizlemeler gönderiye giden
   // bir bağlantının içindedir; onlara buton gösterilmez. Video açılınca
   // (Reels görüntüleyici, gönderi penceresi) bağlantı dışında olur.
@@ -316,19 +303,6 @@
       wrappers.push(row);
     }
 
-    // Reels / dialog'da çerçeveyi Instagram'ın yatay video moduna benzer
-    // şekilde, sayfa düzeninde gerçekten boş olan genişlik kadar genişlet.
-    // Yükseklik hiç değişmez; böylece kaydırma ve snap konumları bozulmaz.
-    let targetW = W;
-    let room = null;
-    if (!isFeedPost(video) && row && row !== document.body) {
-      room = findRoom(row);
-      if (room) {
-        const maxW = Math.min(W + room.free - ROOM_MARGIN, window.innerWidth - 2 * EDGE);
-        targetW = Math.round(Math.max(W, Math.min(H * ratio, maxW)));
-      }
-    }
-
     const setWidths = (width) => {
       const props = {
         width: `${width}px`,
@@ -345,27 +319,49 @@
         for (const el of wrappers) setStyles(st, el, props);
       }
     };
-    // Satırdan boş alanın bulunduğu kutuya kadar her kutunun genişletmeden
-    // önceki taşması; sayfada zaten var olan taşmalar hesaba katılmasın.
-    const path = [];
-    if (room && targetW > W) {
-      for (let box = row; box; box = box.parentElement) {
-        path.push({ box, before: contentSpan(box) - innerWidth(box) });
-        if (box === room.box) break;
+    // Reels / dialog'da çerçeveyi Instagram'ın yatay video moduna benzer
+    // şekilde genişlet: sayfa düzeninde hiçbir şey taşmadan verilebilecek en
+    // büyük genişlik denenerek (ikiye bölerek) bulunur. Açıklama gibi esnek
+    // yan sütunlar bir yere kadar daralabilir. Yükseklik hiç değişmez;
+    // böylece kaydırma ve snap konumları bozulmaz.
+    let targetW = W;
+    const maxW = Math.round(Math.min(H * ratio, window.innerWidth - 2 * EDGE));
+    if (!isFeedPost(video) && row && row !== document.body && maxW > W + SIZE_TOLERANCE) {
+      // Satırdan yukarı her kutunun genişletmeden önceki taşması; sayfada
+      // zaten var olan taşmalar hesaba katılmasın.
+      const path = [];
+      for (let box = row, i = 0; box && box !== document.body && i < 12; box = box.parentElement, i++) {
+        path.push({ box, before: Math.max(0, contentSpan(box) - innerWidth(box)) });
       }
-    }
+      // Satırdaki yan sütunlar (açıklama, butonlar) en fazla SIBLING_MIN'e
+      // kadar daralabilir; zaten daha dar olanlar hiç daralmaz.
+      const siblings = [...row.children]
+        .filter((el) => !el.contains(frame) && getComputedStyle(el).position !== 'absolute')
+        .map((el) => ({ el, min: Math.min(el.getBoundingClientRect().width, SIBLING_MIN) }))
+        .filter(({ min }) => min > 0);
 
+      const fits = (width) => {
+        setWidths(width);
+        return path.every(({ box, before }) => contentSpan(box) - innerWidth(box) - before <= 1) &&
+          siblings.every(({ el, min }) => el.getBoundingClientRect().width >= min - 1);
+      };
+
+      if (fits(maxW)) {
+        targetW = maxW;
+      } else {
+        let lo = W;
+        let hi = maxW;
+        for (let i = 0; i < 8 && hi - lo > 8; i++) {
+          const mid = Math.round((lo + hi) / 2);
+          if (fits(mid)) lo = mid;
+          else hi = mid;
+        }
+        targetW = Math.max(W, lo - ROOM_MARGIN / 2);
+      }
+      // Denemelerden kalan sarmalayıcı genişliklerini temizle.
+      restoreStyles(st);
+    }
     setWidths(targetW);
-
-    // Tahmin tutmadıysa (ör. aradaki sabit genişlikli bir kutu taştıysa)
-    // taşan kadar daralt.
-    if (path.length) {
-      const overflow = Math.max(...path.map(({ box, before }) => contentSpan(box) - innerWidth(box) - Math.max(0, before)));
-      if (overflow > 1) {
-        targetW = Math.round(Math.max(W, targetW - overflow - ROOM_MARGIN / 2));
-        setWidths(targetW);
-      }
-    }
 
     if (getComputedStyle(video.parentElement).position === 'static') {
       setStyles(st, video.parentElement, { position: 'relative' });
