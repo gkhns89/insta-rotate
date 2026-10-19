@@ -447,4 +447,43 @@
       refreshButton();
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // Klavye kısayolu (background.js'den gelen mesaj)
+  // ---------------------------------------------------------------------------
+
+  // İmleç bir videonun üstünde değilse ekranda en çok görünen video; oynayan
+  // videolar öne çıkar. Açık bir dialog varsa önce onun içindekiler denenir.
+  function mostVisibleVideo() {
+    const dialogs = [...document.querySelectorAll('[role="dialog"]')];
+    const pick = (inDialogOnly) => {
+      let best = null;
+      let bestScore = 0;
+      for (const video of videos) {
+        if (inDialogOnly && !dialogs.some((d) => d.contains(video))) continue;
+        const rect = video.getBoundingClientRect();
+        if (rect.width < MIN_VIDEO_SIZE || rect.height < MIN_VIDEO_SIZE) continue;
+        const w = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
+        const h = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        if (w <= 0 || h <= 0) continue;
+        const score = w * h * (video.paused ? 1 : 2);
+        if (score > bestScore) {
+          best = video;
+          bestScore = score;
+        }
+      }
+      return best;
+    };
+    return (dialogs.length && pick(true)) || pick(false);
+  }
+
+  try {
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message?.type !== 'ivr-rotate') return;
+      const video = (pointer && pickVideo(pointer.x, pointer.y, pointer.target)) || mostVisibleVideo();
+      if (video) rotate(video, message.delta);
+    });
+  } catch {
+    // Uzantı dışında (test sayfası) chrome.runtime yok.
+  }
 })();

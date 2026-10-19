@@ -1,17 +1,38 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "author": "G.Codes",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
-      "matches": ["https://www.instagram.com/*"],
-      "js": ["content.js"],
+      "matches": [
+        "https://www.instagram.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
+  "commands": {
+    "rotate-video": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "__MSG_cmdRotate__"
+    },
+    "rotate-video-reverse": {
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
+      "description": "__MSG_cmdRotateReverse__"
+    }
+  },
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

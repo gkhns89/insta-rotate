@@ -10,5 +10,11 @@
   },
   "rotateTitle": {
     "message": "Videoyu döndür (Shift + tık: ters yöne)"
+  },
+  "cmdRotate": {
+    "message": "Videoyu döndür"
+  },
+  "cmdRotateReverse": {
+    "message": "Videoyu ters yöne döndür"
   }
 }

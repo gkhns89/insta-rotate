@@ -28,6 +28,7 @@ HOW TO USE
 • Hover over a video on Instagram; a rotate button appears at the edge of the video.
 • Click the button: the video rotates 90° and switches to landscape mode.
 • Click again for 180°, 270° and back to the original. Shift + click rotates the other way.
+• Keyboard shortcut: Alt + R rotates the video under the cursor (or the one on screen); Alt + Shift + R rotates the other way. You can change them at chrome://extensions/shortcuts.
 
 FEATURES
 • Each video on its own: only the video you are watching rotates; the others stay as they are.
@@ -58,6 +59,7 @@ NASIL KULLANILIR
 • Instagram'da bir videonun üzerine gelin; videonun kenarında döndürme butonu belirir.
 • Butona tıklayın: video 90° döner ve yatay moda geçer.
 • Tekrar tıklayarak 180°, 270° ve orijinal haline geçin. Shift + tık ters yöne döndürür.
+• Klavye kısayolu: Alt + R imlecin altındaki (ya da ekrandaki) videoyu döndürür; Alt + Shift + R ters yöne döndürür. Kısayolları chrome://extensions/shortcuts sayfasından değiştirebilirsiniz.
 
 ÖZELLİKLER
 • Her video bağımsız: Sadece izlediğiniz video döner, diğer videolar etkilenmez.
@@ -133,5 +135,6 @@ https://github.com/gkhns89/insta-rotate#privacy-policy
 3. Hover over a video; a rotate button appears at the middle of the video's right edge.
 4. Click it: the video rotates 90° and widens into landscape mode. Click again for 180°, 270° and back to the original. Shift + click rotates the other way.
 5. Scroll to the next video: the previous one automatically returns to normal.
+6. Keyboard shortcut: press Alt + R to rotate the video on screen (Alt + Shift + R for the other direction).
 The same works for videos in the home feed and in post dialogs.
 ```

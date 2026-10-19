@@ -10,5 +10,11 @@
   },
   "rotateTitle": {
     "message": "Rotate video (Shift + click: other direction)"
+  },
+  "cmdRotate": {
+    "message": "Rotate the video"
+  },
+  "cmdRotateReverse": {
+    "message": "Rotate the video the other way"
   }
 }

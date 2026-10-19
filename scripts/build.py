@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / 'dist'
-FILES = ['manifest.json', 'content.js', 'icon16.png', 'icon48.png', 'icon128.png', '_locales']
+FILES = ['manifest.json', 'content.js', 'background.js', 'icon16.png', 'icon48.png', 'icon128.png', '_locales']
 
 CHROME_CANDIDATES = [
     os.environ.get('CHROME', ''),

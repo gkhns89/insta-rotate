@@ -1,10 +1,11 @@
 # Video Rotator for Instagram
 
-**Sürüm:** 5.0.0  
+**Sürüm:** 5.1.0  
 **Açıklama:** Video Rotator for Instagram, masaüstü Instagram kullanıcılarının yatay videoları daha kolay izleyebilmesi için videoları döndürme özelliği sunan bir Chrome uzantısıdır.
 
 ## Özellikler
 - Videonun üzerine gelince çıkan butonla o videoyu 90° döndürme (Shift + tık: ters yöne).
+- Klavye kısayolu: Alt + R (ters yön: Alt + Shift + R); chrome://extensions/shortcuts sayfasından değiştirilebilir.
 - Reels ve gönderi pencerelerinde döndürülen video yatay moda genişler, Instagram butonları yeni boyuta göre yerleşir.
 - Sonraki videoya geçildiğinde video otomatik olarak eski haline döner.
 - Ekstra ayar gerektirmeyen basit ve hafif bir uzantı.
@@ -43,11 +44,12 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 
 # Video Rotator for Instagram
 
-**Version:** 5.0.0  
+**Version:** 5.1.0  
 **Description:** Video Rotator for Instagram is a Chrome extension that helps desktop Instagram users easily rotate horizontal videos for better viewing.
 
 ## Features
 - Rotate the video under the cursor by 90° with the hover button (Shift + click: other direction).
+- Keyboard shortcut: Alt + R (other direction: Alt + Shift + R); change it at chrome://extensions/shortcuts.
 - On Reels and post dialogs, the rotated video widens into landscape mode and Instagram's controls follow the new size.
 - The video automatically returns to normal when you move on to the next one.
 - Simple and lightweight extension with no extra settings required.
