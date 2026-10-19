@@ -88,12 +88,15 @@ def main():
     base = f"video-rotator-for-instagram-{manifest['version']}"
 
     key = Path(os.environ.get('IVR_SIGNING_KEY', Path.home() / 'keys' / 'insta-rotate' / 'private-key.pem'))
-    if not key.exists():
-        sys.exit(f'İmza anahtarı bulunamadı: {key}')
 
     DIST.mkdir(exist_ok=True)
     print(build_zip(base))
-    print(build_crx(base, key))
+    if key.exists():
+        print(build_crx(base, key))
+    else:
+        (DIST / f'{base}.crx').unlink(missing_ok=True)  # eski koddan kalmış imzalı paket yüklenmesin
+        print(f'İmza anahtarı yok ({key}); .crx üretilmedi. Yayın için anahtarı geçici olarak oraya koyun '
+              'ya da IVR_SIGNING_KEY ile yolunu verin, işiniz bitince silin.')
 
 
 if __name__ == '__main__':

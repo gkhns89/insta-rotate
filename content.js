@@ -326,6 +326,25 @@
   // Butonun hangi videoda gösterileceği
   // ---------------------------------------------------------------------------
 
+  // Video (x, y) noktasında gerçekten en üstte mi? Tarayıcının o noktadaki
+  // katman sırasında videoyu içeren yakın bir kutu aranır; o kutunun üstündeki
+  // her şey kutunun kendi içinden olmalı (ses, etiket, tıklama katmanı).
+  // Üstte başka bir katman varsa (ör. Reels'te açılan tam ekran görüntüleyici
+  // arkadaki akış videolarını örter) video görünmüyor sayılır.
+  function isVideoOnTop(video, x, y, stack = document.elementsFromPoint(x, y)) {
+    const rect = video.getBoundingClientRect();
+    const maxArea = rect.width * rect.height * 3;
+    for (let i = 0; i < stack.length; i++) {
+      const box = stack[i];
+      if (box === video || !box.contains(video)) continue;
+      if (box === document.body || box === document.documentElement) return false;
+      const r = box.getBoundingClientRect();
+      if (r.width * r.height > maxArea) return false;
+      if (stack.slice(0, i).every((el) => box.contains(el) || button.contains(el))) return true;
+    }
+    return false;
+  }
+
   function pickVideo(x, y, target) {
     if (target === button || button.contains(target)) return current;
 
@@ -333,6 +352,7 @@
     // akış videolarına buton gösterme.
     const dialog = target instanceof Element ? target.closest('[role="dialog"]') : null;
 
+    let stack = null;
     let best = null;
     let bestArea = Infinity;
     for (const video of videos) {
@@ -340,6 +360,8 @@
       if (rect.width < MIN_VIDEO_SIZE || rect.height < MIN_VIDEO_SIZE) continue;
       if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) continue;
       if (dialog ? !dialog.contains(video) : isInDialog(video)) continue;
+      stack ||= document.elementsFromPoint(x, y);
+      if (!isVideoOnTop(video, x, y, stack)) continue;
 
       const area = rect.width * rect.height;
       if (area < bestArea) {
@@ -466,6 +488,9 @@
         const w = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
         const h = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
         if (w <= 0 || h <= 0) continue;
+        const cx = Math.max(rect.left, 0) + w / 2;
+        const cy = Math.max(rect.top, 0) + h / 2;
+        if (!isVideoOnTop(video, cx, cy)) continue;
         const score = w * h * (video.paused ? 1 : 2);
         if (score > bestScore) {
           best = video;
