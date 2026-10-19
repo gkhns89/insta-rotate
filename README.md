@@ -5,7 +5,7 @@
 
 ## Özellikler
 - Videonun üzerine gelince çıkan butonla o videoyu 90° döndürme (Shift + tık: ters yöne).
-- Klavye kısayolu: Alt + R (ters yön: Alt + Shift + R); chrome://extensions/shortcuts sayfasından değiştirilebilir.
+- Klavye kısayolları: Alt + Shift + ← (sola) ve Alt + Shift + → (sağa); chrome://extensions/shortcuts sayfasından değiştirilebilir.
 - Reels ve gönderi pencerelerinde döndürülen video yatay moda genişler, Instagram butonları yeni boyuta göre yerleşir.
 - Sonraki videoya geçildiğinde video otomatik olarak eski haline döner.
 - Ekstra ayar gerektirmeyen basit ve hafif bir uzantı.
@@ -49,7 +49,7 @@ Herhangi bir sorunla karşılaşırsanız veya sorularınız varsa, lütfen [Git
 
 ## Features
 - Rotate the video under the cursor by 90° with the hover button (Shift + click: other direction).
-- Keyboard shortcut: Alt + R (other direction: Alt + Shift + R); change it at chrome://extensions/shortcuts.
+- Keyboard shortcuts: Alt + Shift + ← (left) and Alt + Shift + → (right); change them at chrome://extensions/shortcuts.
 - On Reels and post dialogs, the rotated video widens into landscape mode and Instagram's controls follow the new size.
 - The video automatically returns to normal when you move on to the next one.
 - Simple and lightweight extension with no extra settings required.

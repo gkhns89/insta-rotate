@@ -12,9 +12,9 @@
     "message": "Videoyu döndür (Shift + tık: ters yöne)"
   },
   "cmdRotate": {
-    "message": "Videoyu döndür"
+    "message": "Videoyu sola döndür (saat yönünün tersine)"
   },
   "cmdRotateReverse": {
-    "message": "Videoyu ters yöne döndür"
+    "message": "Videoyu sağa döndür (saat yönünde)"
   }
 }

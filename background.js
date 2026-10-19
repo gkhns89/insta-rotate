@@ -1,6 +1,7 @@
 // Klavye kısayollarını (manifest "commands") aktif sekmedeki content script'e iletir.
 // Kısayollar chrome://extensions/shortcuts sayfasından değiştirilebilir.
 
+// Alt+Shift+← sola (saat yönünün tersine), Alt+Shift+→ sağa döndürür.
 const DELTAS = {
   'rotate-video': -90,
   'rotate-video-reverse': 90

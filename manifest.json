@@ -22,13 +22,13 @@
   "commands": {
     "rotate-video": {
       "suggested_key": {
-        "default": "Alt+R"
+        "default": "Alt+Shift+Left"
       },
       "description": "__MSG_cmdRotate__"
     },
     "rotate-video-reverse": {
       "suggested_key": {
-        "default": "Alt+Shift+R"
+        "default": "Alt+Shift+Right"
       },
       "description": "__MSG_cmdRotateReverse__"
     }

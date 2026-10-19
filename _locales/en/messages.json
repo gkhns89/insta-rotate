@@ -12,9 +12,9 @@
     "message": "Rotate video (Shift + click: other direction)"
   },
   "cmdRotate": {
-    "message": "Rotate the video"
+    "message": "Rotate the video left (counter-clockwise)"
   },
   "cmdRotateReverse": {
-    "message": "Rotate the video the other way"
+    "message": "Rotate the video right (clockwise)"
   }
 }
